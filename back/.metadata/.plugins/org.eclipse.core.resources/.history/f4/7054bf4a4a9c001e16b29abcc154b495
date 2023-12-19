@@ -1,0 +1,9 @@
+package com.alten.shop.enums;
+
+public enum Category {
+	ACCESSORIES, CLOTHING, ELECTRONICS, FITNESS
+	
+	public String front() {
+		
+	}
+}

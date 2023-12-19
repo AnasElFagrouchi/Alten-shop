@@ -1,0 +1,14 @@
+package com.alten.shop.enums;
+
+public enum Category {
+	ACCESSORIES("Accessories"),
+	CLOTHING("Clothing"),
+	ELECTRONICS("Ele"),
+	FITNESS("Fit");
+	
+	public final String label;
+
+    private Category(String label) {
+        this.label = label;
+    }
+}

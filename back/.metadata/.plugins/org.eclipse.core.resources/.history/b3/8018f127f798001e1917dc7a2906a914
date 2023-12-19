@@ -1,0 +1,9 @@
+package com.alten.shop.repositories;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.alten.shop.models.Product;
+
+public class ProductRepository implements JpaRepository<Product, Long> {
+
+}

@@ -1,0 +1,29 @@
+package com.alten.shop.repositories;
+
+import org.hibernate.annotations.Type;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import com.alten.shop.models.Product;
+
+import jakarta.persistence.Column;
+
+@Repository
+public class ProductRepository implements JpaRepository<Product, Long> {
+	@Id
+	Long id;
+	String code;
+	String name;
+	@Column(columnDefinition = "Text")
+	String description;
+	String image;
+	Double price;
+	String category;
+	Integer quantity;
+	int status;
+	int rating;
+	
+	
+	
+}

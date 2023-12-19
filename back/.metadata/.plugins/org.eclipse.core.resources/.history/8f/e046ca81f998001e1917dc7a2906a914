@@ -1,0 +1,9 @@
+package com.alten.shop.services;
+
+import org.springframework.stereotype.Service;
+
+public interface IService {
+	
+	public Product addProduct(Product p);
+	
+}

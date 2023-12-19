@@ -1,0 +1,13 @@
+package com.alten.shop.enums;
+
+public enum InventoryStatus {
+	IN_STOCK("INSTOCK"), 
+	OUT_OF_STOCK,
+	LOW_STOCK;
+	
+	public final String label;
+
+    private InventoryStatus(String label) {
+        this.label = label;
+    }
+}

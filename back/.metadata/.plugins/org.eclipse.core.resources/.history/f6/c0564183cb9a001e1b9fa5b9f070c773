@@ -1,0 +1,9 @@
+package com.alten.shop.enums;
+
+public enum Rating {
+	ONE, TWO, THREE, FOUR, FIVE;
+	
+	 public int getModifiedValue() {
+        return this.ordinal() + 1;
+    }
+}

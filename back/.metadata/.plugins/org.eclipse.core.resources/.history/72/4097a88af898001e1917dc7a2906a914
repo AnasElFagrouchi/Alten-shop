@@ -1,0 +1,28 @@
+package com.alten.shop.models;
+
+import org.springframework.data.annotation.Id;
+
+import com.alten.shop.enums.InventoryStatus;
+import com.alten.shop.enums.Rating;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+
+@Entity
+public class Product {
+	@Id
+	Long id;
+	String code;
+	String name;
+	@Column(columnDefinition = "Text")
+	String description;
+	String image;
+	Double price;
+	String category;
+	Integer quantity;
+	InventoryStatus status;
+	Rating rating;
+	
+	
+	
+}

@@ -1,0 +1,95 @@
+package com.alten.shop;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+
+import java.util.Collections;
+import java.util.Optional;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import com.alten.shop.model.entity.Product;
+import com.alten.shop.repositories.ProductRepository;
+import com.alten.shop.services.ServiceImpl;
+
+@ExtendWith(MockitoExtension.class)
+public class ServiceImplTest {
+
+    @Mock
+    private ProductRepository productRepository;
+
+    @InjectMocks
+    private ServiceImpl productService;
+
+    @Test
+    public void testAddProduct() {
+        // Mocking
+        when(productRepository.save(any(Product.class))).thenReturn(new Product());
+
+        // Test
+        Product product = productService.addProduct(new Product());
+        
+        // Verify
+        assertNotNull(product);
+    }
+
+    @Test
+    public void testGetAllProducts() {
+        // Mocking
+        when(productRepository.findAll()).thenReturn(Collections.emptyList());
+
+        // Test
+        assertEquals(0, productService.getAllProducts().size());
+
+        // Verify
+        verify(productRepository, times(1)).findAll();
+    }
+
+    @Test
+    public void testGetProduct() {
+        // Mocking
+        Long productId = 1L;
+        Product p = new Product();
+        p.setId(1L);
+        when(productRepository.findById(productId)).thenReturn(Optional.of(p));
+
+        // Test
+        Product product = productService.getProduct(productId);
+
+        // Verify
+        assertEquals(productId, product.getId());
+    }
+
+    @Test
+    public void testUpdateProduct() {
+        // Mocking
+        Product updatedProduct = new Product();
+        when(productRepository.findById(updatedProduct.getId())).thenReturn(Optional.of(new Product()));
+        when(productRepository.save(any(Product.class))).thenReturn(updatedProduct);
+
+        // Test
+        assertEquals(updatedProduct, productService.updateProduct(updatedProduct));
+
+        // Verify
+        verify(productRepository, times(1)).findById(updatedProduct.getId());
+        verify(productRepository, times(1)).save(any(Product.class));
+    }
+
+    @Test
+    public void testDeleteProduct() {
+        // Mocking
+        Long productId = 1L;
+
+        // Test
+        productService.deleteProduct(productId);
+
+        // Verify
+        verify(productRepository, times(1)).deleteById(productId);
+    }
+}

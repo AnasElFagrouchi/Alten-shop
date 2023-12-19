@@ -1,0 +1,116 @@
+package com.alten.shop.controller;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.alten.shop.model.dto.ProductDto;
+import com.alten.shop.model.dto.ProductMapper;
+import com.alten.shop.model.entity.Product;
+import com.alten.shop.services.IService;
+
+@CrossOrigin("*")
+@RequestMapping("/products")
+@RestController
+public class ProductController {
+	@Autowired
+	private IService service;
+	
+	public ProductController() {
+	}
+	
+	@PostMapping
+	public ResponseEntity<Map<String, Object>> addProduct(@RequestBody ProductDto productDto) {
+		Product product = ProductMapper.INSTANCE.toProduct(productDto);
+		Map<String, Object> body = new HashMap<>();
+		Product savedProduct = service.addProduct(product);
+		if (savedProduct != null) {
+			ProductDto addProductDto = ProductMapper.INSTANCE.toDTO(savedProduct);
+			body.put("data", addProductDto);
+	        body.put("message", "Product created !");
+			return new ResponseEntity<>(body, HttpStatus.OK);
+		}
+		else {
+	        body.put("message", "INTERNAL_SERVER_ERROR");
+            return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);	
+		}
+	}
+
+	@GetMapping
+	public ResponseEntity<Map<String, Object>> getAllProducts() {
+		List<Product> products = service.getAllProducts();
+		List<ProductDto> productDtos = products.stream().map(p -> ProductMapper.INSTANCE.toDTO(p)).toList();
+		Map<String, Object> body = new HashMap<>();
+		body.put("data", productDtos);
+		return new ResponseEntity<>(body, HttpStatus.OK);
+	}
+
+	@GetMapping("/{id}")
+	public ResponseEntity<Map<String, Object>> getProduct(@PathVariable Long id) {
+		Product product = service.getProduct(id);
+		Map<String, Object> body = new HashMap<>();
+		if (product == null) {
+	        body.put("message", "No product found with id : " + id);
+			body.put("data", null);
+	        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+	    }
+		ProductDto productDto = ProductMapper.INSTANCE.toDTO(product);
+		body.put("data", productDto);
+		return new ResponseEntity<>(body, HttpStatus.OK);
+	}
+
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Map<String, Object>> deleteProduct(@PathVariable Long id) {
+		Product product = service.getProduct(id);
+		Map<String, Object> body = new HashMap<>();
+		if (product != null) {
+			service.deleteProduct(id);
+			body.put("message", "Product with id : " + id + " has been deleted !");
+			return new ResponseEntity<>(body, HttpStatus.OK);
+		} else {
+	        body.put("message", "No product found with id : " + id);
+			return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+		}
+	}
+
+	@PutMapping
+	public ResponseEntity<Map<String, Object>> updateProduct(@RequestBody ProductDto productDto) {
+		Product existingProduct = service.getProduct(productDto.getId());
+		Map<String, Object> body = new HashMap<>();
+		
+	    if (existingProduct != null) {
+	        Product updatedProduct = ProductMapper.INSTANCE.toProduct(productDto);
+	        updatedProduct.setId(existingProduct.getId());
+	
+	        Product savedProduct = service.updateProduct(updatedProduct);
+	
+	        if (savedProduct != null) {
+	            ProductDto savedProductDto = ProductMapper.INSTANCE.toDTO(savedProduct);
+	    		body.put("data", savedProductDto);
+		        body.put("message", "Product updated !");
+	            return new ResponseEntity<>(body, HttpStatus.OK);
+	        } else {
+		        body.put("message", "INTERNAL_SERVER_ERROR");
+		        body.put("data", null);
+	            return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
+	        }
+	    } else {
+	        body.put("data", null);
+	        body.put("message", "No product found !");
+	        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+	    }
+	}
+}

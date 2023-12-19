@@ -1,0 +1,5 @@
+package com.alten.shop.model.dto;
+
+public class ProductDto {
+
+}

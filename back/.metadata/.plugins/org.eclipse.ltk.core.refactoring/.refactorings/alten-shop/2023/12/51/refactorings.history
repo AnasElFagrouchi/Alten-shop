@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename local variable &apos;savedProduct&apos; in &apos;com.alten.shop.controller.ProductController.updateProduct(...)&apos; to &apos;product&apos;&#x0D;&#x0A;- Original project: &apos;alten-shop&apos;&#x0D;&#x0A;- Original element: &apos;com.alten.shop.controller.ProductController.updateProduct(ProductDto).savedProduct&apos;&#x0D;&#x0A;- Renamed element: &apos;savedProduct&apos;&#x0D;&#x0A;- Update references to refactored element" description="Rename local variable &apos;savedProduct&apos;" id="org.eclipse.jdt.ui.rename.local.variable" input="/src\/main\/java=/optional=/true=/=/maven.pomderived=/true=/&lt;com.alten.shop.controller{ProductController.java[ProductController~updateProduct~QProductDto;@savedProduct!3527!3617!3535!3546!QProduct;!0!false" name="product" references="true" stamp="1702899320655" version="1.0"/>
+</session>

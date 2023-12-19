@@ -1,0 +1,49 @@
+package com.alten.shop.model.dto;
+
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
+import org.mapstruct.factory.Mappers;
+
+import com.alten.shop.enums.Category;
+import com.alten.shop.enums.InventoryStatus;
+import com.alten.shop.model.entity.Product;
+
+@Mapper
+public interface ProductMapper {
+	ProductMapper INSTANCE = Mappers.getMapper(ProductMapper.class);
+
+    @Mapping(source = "status", target = "status", qualifiedByName = "toStringStatus")
+    @Mapping(source = "category", target = "category", qualifiedByName = "toStringCategory")
+    ProductDto toDTO(Product product);
+    
+    @Mapping(source = "status", target = "status", qualifiedByName = "toStatusEnum")
+    @Mapping(source = "category", target = "category", qualifiedByName = "toCategoryEnum")
+    Product toProduct(ProductDto productDTO);
+    
+    @Named("toCategoryEnum")
+    default Category toCategoryEnum(String category) {
+        return Category.valueOfLabel(category);
+    }
+
+    @Named("toStringCategory")
+    default String toStringCategory(Category category) {
+    	if (category != null) {
+    		        return category.label;
+    	}
+    	return null;
+    }    
+    
+    @Named("toStatusEnum")
+    default InventoryStatus toStatusEnum(String status) {
+        return InventoryStatus.valueOfLabel(status);
+    }
+
+    @Named("toStringStatus")
+    default String toStringStatus(InventoryStatus status) {
+        if (status != null) {
+        	return status.label;
+        }
+        return null;
+    }
+}

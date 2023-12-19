@@ -1,0 +1,58 @@
+package com.alten.shop.model.dto;
+
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
+import org.mapstruct.factory.Mappers;
+
+import com.alten.shop.enums.Category;
+import com.alten.shop.enums.InventoryStatus;
+import com.alten.shop.model.entity.Product;
+
+@Mapper
+public interface ProductMapper {
+	ProductMapper INSTANCE = Mappers.getMapper(ProductMapper.class);
+
+    @Mapping(source = "status", target = "status", qualifiedByName = "toStringStatus")
+    @Mapping(source = "category", target = "category", qualifiedByName = "toStringCategory")
+    ProductDto toDTO(Product product);
+    
+    @Mapping(source = "status", target = "status", qualifiedByName = "toStatusEnum")
+    @Mapping(source = "category", target = "category", qualifiedByName = "toCategoryEnum")
+    Product toProduct(ProductDto productDTO);
+    
+    @Named("toCategoryEnum")
+    default Category toCategoryEnum(String category) {
+        if (category == null || category.equals("")) {
+            return null;
+        }
+        return Category.valueOf(category.toUpperCase());
+    }
+
+    @Named("toStringCategory")
+    default String toStringCategory(Category category) {
+        if (category == null) {
+            return null;
+        }
+        String string = category.toString();
+        return string.substring(0, 1).toUpperCase() + string.substring(1).toLowerCase();
+    }    
+    
+    @Named("toStatusEnum")
+    default InventoryStatus toStatusEnum(String status) {
+        if (status == null || category.equals("")) {
+            return null;
+        }
+        status = status.replaceAll("STOCK", "_STOCK");
+        status = status.replaceAll("OUTOF", "OUT_OF");
+        return InventoryStatus.valueOf(status);
+    }
+
+    @Named("toStringStatus")
+    default String toStringStatus(InventoryStatus status) {
+        if (status == null) {
+            return null;
+        }
+        return status.toString().replace(String.valueOf('_'), "");
+    }
+}
